@@ -1,0 +1,23 @@
+.login_outer{
+    position: absolute; width: 100vw; height: 100vh; 
+    background-color: rgb(34, 34, 34) ;
+}
+
+.login_cont{
+    left: 50%; top: 50%; transform: translate(-50%,-50%); position: absolute;
+    display: flex; flex-direction: column; gap: 5%; height: 50vh; 
+    border: 1px solid white; justify-content: center; width: 30vw;
+    align-items: center; background-color: rgb(86, 78, 75);
+}
+.username_input{
+    border-radius: 10px; background-color: aliceblue; color: black;
+    width: 60%; padding-left: 2%; padding-right: 2%; text-align: center;
+}
+.password_input{
+     border-radius: 10px; background-color: aliceblue; color: black; 
+     width: 60%;  padding-left: 2%; padding-right: 2%; text-align: center;
+}
+.submit_login{
+    width: 60%; height: 10vh; background-color: royalblue; cursor: pointer;
+    border-radius: 5px;
+}
