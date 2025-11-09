@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from './components/navbar'
+import Nav from './components/navbar_handler'
 import { cookies } from 'next/headers';
 //CSS//
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
 import './styles/login.css'
+import './styles/registration.css'
 import './styles/main.css'
 import './styles/dashboard.css'
+import './styles/home.css'
 
 //////
 
@@ -41,7 +43,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {jwt && <Navbar />}
+        {jwt && <Nav />}
         {children}
       </body>
     </html>

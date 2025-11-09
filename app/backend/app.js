@@ -6,6 +6,7 @@ const router = require('./routes')
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
+
 // Middleware
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
@@ -17,11 +18,13 @@ app.use('/', router);
 
 const bcrypt = require('bcrypt');
 async function main() {
-  // Make sure tables exist
-  await sequelize.sync();
-  console.log('Database synced');
+
   await sequelize.authenticate();
   console.log('Database connected');
+  // Make sure tables exist
+  await sequelize.sync({alter: true});
+  console.log('Database synced');
+  
 
   app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
@@ -35,7 +38,7 @@ async function main() {
   let password = 'password'
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = await User.create({username: 'gabri', firstName: 'Gabriel', 
-    lastName: 'B', password:hashedPassword});
+    lastName: 'B', password:hashedPassword, email: 'gabrielbpoitras@gmail.com'});
 
   console.log(newUser.toJSON());
 

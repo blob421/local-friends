@@ -6,7 +6,7 @@ export async function fetchAuth(url: string, options: RequestInit = {}) {
   });
 
   if ([403, 401].includes(response.status)) {
-    window.location.href = '/login'
+    window.location.href = '/'
   
   }
 

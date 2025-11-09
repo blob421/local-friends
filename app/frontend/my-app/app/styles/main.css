@@ -1,4 +1,11 @@
 .nav_main{
-    position: fixed; left: 0; width: 10vw; height: 100vw;
-     background-color: grey; top: 0; z-index: 1000;
+    position: fixed; left: 0; width: 100vw; height: 10vw;
+     background-color: grey; top: 0; z-index: 1000; color: black;
+}
+
+@media(max-width:720px){
+    .nav_main{
+        height: 10vh; width: 100vw;
+    }
+  
 }

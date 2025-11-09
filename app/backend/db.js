@@ -6,21 +6,12 @@ class User extends Model {}
 
 User.init(
   {
-    // Model attributes are defined here
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      // allowNull defaults to true
-    },
-    username: {
-      type: DataTypes.STRING,
-    },
-    password: {
-      type: DataTypes.STRING
-    }
+    firstName: {type: DataTypes.STRING},
+    lastName: {type: DataTypes.STRING},
+    email: {type: DataTypes.STRING, allowNull: false},
+    username: {type: DataTypes.STRING, allowNull: false},
+    password: {type: DataTypes.STRING, allowNull: false},
+    found: {type: DataTypes.INTEGER},
   },
   {
     // Other model options go here
@@ -28,6 +19,8 @@ User.init(
     modelName: 'User', // We need to choose the model name
   },
 );
+
+
 
 // the defined model is the class itself
 console.log(User === sequelize.models.User); // true

@@ -31,19 +31,38 @@ export default  function Dashboard(){
 
 
   return (
-    <div className="row">
-         <div className="col-md-6">
-              <div className="rectangle">
+    <div className="container-fluid dash_cont">
+        <div className="row">
+          
+            <div className="col-md-6">
+                  <div className="rectangle">
 
-              </div>
-         </div>
-          <div className="col-md-6 rectangle">
-              <div className="rectangle">
+                  </div>
+            </div>
+              <div className="col-md-6">
+                  <div className="rectangle">
+                    
+                  </div>            
                 
-              </div>            
-            
-         </div>
-     
-    </div>
+            </div>
+        
+        </div>
+        <div className="row">
+           
+            <div className="col-md-6">
+                  <div className="rectangle">
+
+                  </div>
+            </div>
+              <div className="col-md-6">
+                  <div className="rectangle">
+                    
+                  </div>            
+                
+            </div>
+        
+        </div>
+    
+  </div>
   )
 }

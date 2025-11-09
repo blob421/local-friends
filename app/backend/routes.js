@@ -41,5 +41,39 @@ router.get('/dashboard', authenticateToken, (req, res) => {
    
 });
 
+router.post('/register', async (req, res) => {
+  const data = req.body
+  const hashed = await bcrypt.hash(data.password, 10)
+  const existingUser = await User.findOne({where:{username: data.username}})
+  const existingEmail = await User.findOne({where:{email: data.email}})
+  if (existingUser){
+    return res.redirect(
+   `${process.env.FRONT_END_URL}/registration?error=username_exists&username=${encodeURIComponent(
+    data.username)}&email=${encodeURIComponent(data.email)}`);
+
+  }
+  if (existingEmail){
+    return res.redirect(
+   `${process.env.FRONT_END_URL}/registration?error=email_exists&username=${encodeURIComponent(
+    data.username)}&email=${encodeURIComponent(data.email)}`);
+  }
+
+  const newUser = await User.create({username: data.username, password: hashed, 
+    email:data.email})
+
+  
+  const token = jwt.sign({id: newUser.id, username: newUser.username},
+    process.env.JWT_SECRET, 
+    {expiresIn: '15m'}
+  )
+  res.cookie('jwt', token, {
+    maxAge: 3600000,
+    sameSite: 'lax',
+    secure: false,
+    httpOnly: true
+  }) 
+  res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
+})
+
 
 module.exports = router;
