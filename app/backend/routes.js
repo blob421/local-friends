@@ -27,12 +27,18 @@ router.post('/login', async (req, res) => {
     { expiresIn: '15m' } // short-lived token
   );
 
-  res.json({ token });
+   res.cookie('jwt', token, {
+    httpOnly: true,
+    secure: false, // set to true in production with HTTPS
+    sameSite: 'lax',
+    maxAge: 3600000, // 1 hour
+  });
+  res.redirect(`${process.env.FRONT_END_URL}/dashboard`);
 });
 
 
 router.get('/dashboard', authenticateToken, (req, res) => {
-  res.json({ message: `Welcome ${req.user.username}` });
+   
 });
 
 

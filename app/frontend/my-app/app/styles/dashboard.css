@@ -1,0 +1,6 @@
+.rectangle{
+    background-color: aliceblue; height: 40vh;
+}
+html{
+    width: 100vw; overflow-x: hidden;
+}

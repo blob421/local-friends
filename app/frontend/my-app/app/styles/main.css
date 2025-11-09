@@ -1,0 +1,4 @@
+.nav_main{
+    position: fixed; left: 0; width: 10vw; height: 100vw;
+     background-color: grey; top: 0; z-index: 1000;
+}

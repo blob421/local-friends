@@ -4,10 +4,15 @@ const express = require('express');
 const app = express();
 const router = require('./routes')
 const cors = require('cors')
+const cookieParser = require('cookie-parser');
+
 // Middleware
 app.use(express.json());
-app.use(cors());
-// Mount routes
+app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use('/', router);
 
 const bcrypt = require('bcrypt');

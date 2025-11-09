@@ -41,16 +41,17 @@ const router = useRouter();
   return (
     <div className="login_outer">
       
-          <form method="POST" className="login_cont" onSubmit={login}>
+          <form method="POST" className="login_cont" action={`${url}/login`}>
 
-      
+              <h1 className="login_head">Login</h1>
+
               <input type="text" className="username_input" 
-              placeholder="username" value={username} autoComplete="username"
+              placeholder="username" value={username}
               required name="username"
               onChange={(e) => setUsername(e.target.value)}></input>
 
               <input type="password" className="password_input" 
-              placeholder="password" value={password} autoComplete="current-password"
+              placeholder="password" value={password} 
               required name="password"
               onChange={(e)=> setPassword(e.target.value)}></input>
 
