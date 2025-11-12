@@ -5,9 +5,10 @@ import { cookies } from 'next/headers';
 //CSS//
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
+import './styles/landing.css'
 import './styles/login.css'
 import './styles/registration.css'
-import './styles/main.css'
+import './styles/navbar.css'
 import './styles/dashboard.css'
 import './styles/home.css'
 

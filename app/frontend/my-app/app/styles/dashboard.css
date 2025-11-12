@@ -1,3 +1,67 @@
 .rectangle{
-    background-color: rgb(121, 121, 121); height: 45vh; margin: 10px;
+    background-color: rgb(121, 121, 121); height: 39vh; margin: 10px;
+    border-radius: 10px; overflow: hidden; position: relative;
 }
+
+.menu_options{
+    background-color: aqua;
+}
+.top_bar_dashboard{
+    background-color: aliceblue; color: black; text-align: center;
+}
+
+/*********************Square 1*************************/
+
+.team_upper{
+    height: 25%; background-color: rgba(59, 59, 59, 0.321); 
+    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
+    display: flex; justify-content: center;
+}
+.teams_grid{
+    display: grid;  grid-template-columns: repeat(4, 1fr);
+     overflow-y: scroll; padding-top: 2.5vh; height: 75%; scrollbar-width: thin;
+}
+.teams_grid > * {
+  justify-self: center; 
+}
+.team_ico:hover{
+    animation: wiggle ; animation-duration: 1.5s; animation-fill-mode: forwards;
+}
+.team_ico{
+    cursor: pointer; border: 1px solid black;
+}
+@keyframes wiggle{
+    to{transform: scale(1.1);} from{transform: scale(1);}
+}
+
+/*********************Square 2*************************/
+
+.badges_title{
+    height: 25%; background-color: rgba(59, 59, 59, 0.321); 
+    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
+    display: flex; justify-content: center;
+}
+
+/*********************Square 3*************************/
+.account_top{
+  height: 25%; background-color: rgba(59, 59, 59, 0.321); 
+    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
+    display: flex; justify-content: center;
+}
+.account_bot{
+ padding-top: 2.5vh;
+}
+.edit_icon_dash{
+    position: absolute; right: 10; top: 10;
+
+}
+/*********************Square 4*************************/
+.stats_top{
+  height: 25%; background-color: rgba(59, 59, 59, 0.321); 
+    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
+    display: flex; justify-content: center;
+}
+.stats_bot{
+
+}
+

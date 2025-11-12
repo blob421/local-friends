@@ -2,8 +2,10 @@ const { Sequelize, DataTypes, Model } = require('sequelize');
 
 const sequelize = new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
 
-class User extends Model {}
 
+///////////////////////////// MODELS ////////////////////////////////
+
+class User extends Model {}
 User.init(
   {
     firstName: {type: DataTypes.STRING},
@@ -11,7 +13,6 @@ User.init(
     email: {type: DataTypes.STRING, allowNull: false},
     username: {type: DataTypes.STRING, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
-    found: {type: DataTypes.INTEGER},
   },
   {
     // Other model options go here
@@ -20,9 +21,126 @@ User.init(
   },
 );
 
+class Region extends Model {}
+Region.init({
+  name: {type: DataTypes.STRING , allowNull: false, unique:true},
+  municipality: {type: DataTypes.STRING},
+  city: {type: DataTypes.STRING, allowNull: false},
+  country: {type: DataTypes.STRING, allowNull: false},
+},
+{
+  sequelize,
+  modelName: 'Region'
+})
+
+
+class Post extends Model {}
+Post.init(
+  {
+   title:{type:DataTypes.STRING, allowNull:false},
+   content: {type: DataTypes.TEXT, allowNull: false},
+
+  },
+  {
+  sequelize,
+  modelName: 'Post'
+}
+)
+
+class UserStat extends Model {}
+UserStat.init(
+  {
+    found: {type: DataTypes.INTEGER}
+  },
+  {
+    sequelize,
+    modelName: 'UserStat'
+  }
+)
+class Team extends Model {}
+Team.init(
+  {
+    name:{type:DataTypes.STRING, allowNull: false, unique:true},
+  },
+    {
+    sequelize,
+    modelName: 'Team'
+  }
+)
+class Badge extends Model {}
+Badge.init(
+  {
+    name: {type: DataTypes.STRING, allowNull: false},
+  },
+    {
+    sequelize,
+    modelName: 'Badge'
+  }
+
+)
+class UserBadge extends Model {}
+UserBadge.init(
+  {
+    // You can add extra fields here if needed, e.g.:
+    awardedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  },
+  {
+    sequelize,
+    modelName: 'UserBadge'
+  }
+);
+
+class Media extends Model {}
+Media.init(
+  {
+    filename: { type: DataTypes.STRING, allowNull: false },
+    url: { type: DataTypes.STRING, allowNull: false },
+    mimeType:{type: DataTypes.STRING, allowNull:false}
+  },
+  { sequelize, modelName: 'Media' }
+);
+
+//////////////////////////// RELATIONS //////////////////////////////
+Post.hasMany(Media) // for include media in post
+Media.belongsTo(Post,{
+  onDelete: 'CASCADE'
+})
+
+Badge.belongsTo(Team, {
+  onDelete: "CASCADE"
+})
+User.belongsToMany(Badge, {
+  onDelete: "CASCADE",
+  through: 'UserBadge',
+})
+Badge.belongsToMany(User,{
+ onDelete: "CASCADE",
+ through: 'UserBadge',
+}
+)
+User.belongsTo(Team, {
+  onDelete: 'SET NULL'
+})
+User.belongsTo(Region, {
+  onDelete: 'SET NULL'
+})
+
+Post.belongsTo(Region, {
+  onDelete: 'SET NULL',
+  onUpdate: 'CASCADE'
+})
+
+Post.belongsTo(User, {
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+
+UserStat.belongsTo(User, {
+  onDelete: 'CASCADE'
+})
 
 
 // the defined model is the class itself
 console.log(User === sequelize.models.User); // true
 
-module.exports = { sequelize, User };
+module.exports = { sequelize, User, Post, Region, Team, Badge, Media};

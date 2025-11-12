@@ -1,6 +1,7 @@
 'use client';
-import Navbar from "./navbar"
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+const Navbar = dynamic(() => import('./navbar'));
 
 export default function Nav(){
   const path = usePathname();

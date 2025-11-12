@@ -1,23 +1,45 @@
-.top_bar_home{
-    background-color: rgb(88, 88, 197); height: 10vh;
-}
-.login_btn_home{
-    background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
-    color: white; text-decoration: none; font-size: medium;
-    text-align: center; border-radius: 4px;
 
+/************************ Feed *****************************/
+
+.feed_left{
+    background-color: grey; height: 90vh; 
 }
-.login_btn_cont{
-     right: 10; position: absolute; display: flex; 
-     align-items: center; height: 10vh; gap: 2%;
+.feed_middle{
+ display: block; overflow-y: scroll;  background-color: rgb(68, 68, 68);
+ position: relative;
 }
-.reg_btn_home{
-    background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
-    color: white; text-decoration: none; font-size: medium;
-    text-align: center;  border-radius: 4px;
+.images_cont_feed{
+    max-width: 300px; max-height: 200px;
 }
-.dashboard_btn_home{
-    background-color: rgb(158, 198, 232); padding: 2%; width: 8vw; 
-    color: white; text-decoration: none; font-size: medium;
-    text-align: center; border-radius: 4px;
+.feed_images{
+    width: 200px; max-height: 200px;
+}
+.post_unit_feed{
+  background-color: aliceblue; color: black; display: flex; 
+  flex-direction: column; width: 100%; align-items: center; margin-bottom: 20px;
+  border-radius: 10px; margin-top: 5px;
+}
+
+/************************ Right panel  *****************************/
+.collapsed_post_form{
+    width: 10px;
+}
+.expand_post_create{
+    position: absolute; top: 50%; right: 0; transform: translateY(-50%);
+    color: white; background-color: black; z-index: 1000; width: 30px;
+    cursor: pointer; user-select: none; border: 1px solid white;
+    border-radius: 5px;
+    
+}
+.post_form{
+    background-color: aliceblue; color: black;
+}
+.textarea_post_feed{
+    height: 40vh;
+}
+.post_btn_feed{
+    width: 10vw; background-color: grey;
+}
+.feed_right{
+    background-color: antiquewhite;  height: 90vh; right: 0; position: relative;
 }

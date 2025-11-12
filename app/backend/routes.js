@@ -4,12 +4,32 @@
 const express = require('express');
 const bcrypt = require('bcrypt'); // for password hashing
 const jwt = require('jsonwebtoken');
-const { User } = require('./db');
+
+
+
+const { User, Post, Team, Badge, Region, Media } = require('./db');
 
 const router = express.Router();
 router.use(express.json());
 
 const authenticateToken = require('./jwt_middleware');
+
+//////////////////// FILE STORAGE ///////////////////
+const multer = require('multer')
+const path = require('path');
+
+const storage = multer.diskStorage({ 
+destination: (req, file, cb) => {
+  cb(null, 'uploads/')
+}, 
+
+filename: (req, file ,cb) => {
+  cb(null, Date.now() + path.extname(file.originalname));
+}
+})
+
+const upload = multer({ storage });
+//////////////////// AUTH ///////////////////////////
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -24,21 +44,27 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
     { id: user.id, username: user.username },
     process.env.JWT_SECRET,
-    { expiresIn: '15m' } // short-lived token
+    { expiresIn: '2d' } 
   );
 
    res.cookie('jwt', token, {
     httpOnly: true,
     secure: false, // set to true in production with HTTPS
     sameSite: 'lax',
-    maxAge: 3600000, // 1 hour
+    maxAge: 60 * 60 * 24 * 1000 * 2,
   });
   res.redirect(`${process.env.FRONT_END_URL}/dashboard`);
 });
 
 
-router.get('/dashboard', authenticateToken, (req, res) => {
-   
+router.get('/dashboard', authenticateToken, async (req, res) => {
+   const user = await User.findOne({where:{id: req.user.id},
+  include: {
+    model: Region,
+    attributes: ['name', 'city', 'country'] 
+  }})
+   const teams = await Team.findAll()
+   res.json({user, teams})
 });
 
 router.post('/register', async (req, res) => {
@@ -64,10 +90,10 @@ router.post('/register', async (req, res) => {
   
   const token = jwt.sign({id: newUser.id, username: newUser.username},
     process.env.JWT_SECRET, 
-    {expiresIn: '15m'}
+    {expiresIn: '2d'}
   )
   res.cookie('jwt', token, {
-    maxAge: 3600000,
+    maxAge:  60 * 60 * 24 * 1000 * 2,
     sameSite: 'lax',
     secure: false,
     httpOnly: true
@@ -75,5 +101,67 @@ router.post('/register', async (req, res) => {
   res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
 })
 
+////////////////////////////// POST ////////////////////////////////////
+router.post('/post', authenticateToken,
+                     upload.array('images', 5) ,
+  async (req, res) => {
+ 
 
+  const data = req.body
+  
+  const user = await User.findOne({where: {id: req.user.id}})
+
+  const post = await Post.create({title: data.title, content: data.content, 
+    RegionId: user.RegionId, UserId: user.id })
+
+  try{
+
+  const files = req.files
+   console.log(files)
+  if (files && files.length > 0){
+    await Promise.all(
+      files.map(file => {
+      Media.create({
+            filename: file.filename,
+            mimeType: file.mimetype,
+            url: file.path,
+            PostId: post.id
+          })
+    })
+)}
+   }catch(err2){
+    console.log(err2)
+   }
+
+  res.redirect(`${process.env.FRONT_END_URL}/home`)
+})
+
+
+
+router.get('/home', authenticateToken, async (req, res) =>{
+  const user = await User.findOne({where: {id: req.user.id}})
+  const region = user.RegionId
+  try {
+  const posts = await Post.findAll({
+    where: {RegionId: region}, order: [['id', 'DESC']], limit : 50, include:[ {
+      model: Media,
+      attributes: ['url']
+    }]
+  })
+
+  console.log(posts)
+  if (posts.length < 1){
+    res.status(404).send('No posts for this region')
+  }
+  res.json({posts})
+
+  }catch(err){
+    res.status(500).send({'Error fetching posts': err})
+  }
+
+
+})
+router.get('/images', async (req, res)=>{
+
+})
 module.exports = router;

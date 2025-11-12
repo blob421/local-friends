@@ -1,4 +1,4 @@
-const { sequelize, User } = require('./db.js');
+const { sequelize, User, Region } = require('./db.js');
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -15,6 +15,7 @@ app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', router);
+app.use('/uploads', express.static('uploads'));
 
 const bcrypt = require('bcrypt');
 async function main() {
@@ -36,9 +37,14 @@ async function main() {
 
   // Create an instance
   let password = 'password'
+  const newRegion = await Region.create({name:'A', city: 'QC', country:'CA'})
+
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = await User.create({username: 'gabri', firstName: 'Gabriel', 
-    lastName: 'B', password:hashedPassword, email: 'gabrielbpoitras@gmail.com'});
+  lastName: 'B', password:hashedPassword, email: 'gabrielbpoitras@gmail.com',
+  RegionId: newRegion.id});
+
+  
 
   console.log(newUser.toJSON());
 

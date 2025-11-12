@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 
 export default async function Home(){
   const cookieStore = await cookies()
@@ -9,20 +10,20 @@ export default async function Home(){
         <div className="container-fluid">
               <div className="row">
 
-                    <div className="col-12 top_bar_home">
+                    <div className="col-12 top_bar_landing">
                          <div className="login_btn_cont">
-                            <a className="dashboard_btn_home" href="/dashboard"
+                            <Link className="dashboard_btn_landing" href="/dashboard"
                             hidden={!hasJwt}>Dashboard
                              
-                            </a>
-                            <a className="login_btn_home" href="/login"
+                            </Link>
+                            <Link className="login_btn_landing" href="/login"
                             hidden={hasJwt}>
                               Login
-                            </a>
-                            <a className="reg_btn_home" href="/registration"
+                            </Link>
+                            <Link className="reg_btn_landing" href="/registration"
                              hidden={hasJwt}>
                               Register
-                            </a>
+                            </Link>
 
                           </div>
                     </div>
