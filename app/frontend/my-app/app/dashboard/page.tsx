@@ -2,7 +2,13 @@
 import { useEffect, useState } from "react"
 import { fetchAuth } from '../components/fetch';
 import Image from 'next/image'
+import $ from 'jquery'
+import dynamic from 'next/dynamic';
+
+const UserModal = dynamic(()=> import('./user_info_modal'))
+
 export default  function Dashboard(){
+
   const url = process.env.NEXT_PUBLIC_API_URL
   const [username, setUsername] = useState("")
   const [firstName, setFirstName] = useState('')
@@ -10,8 +16,15 @@ export default  function Dashboard(){
   const [team, setTeam] = useState("")
   const [email , setEmail] = useState("")
   const [region , setRegion] = useState("")
+  const [pictureUrl, setPicture] = useState("")
+  const [showModal, setModal] = useState(false)
   
-
+  const params = new URLSearchParams(window.location.search)
+  const modal = params.get('modal')
+  
+  if(modal){
+   $('#profile_modal_bg').show()
+  }
 
   useEffect(()=>{
     const fetch_data = async () =>{
@@ -32,6 +45,7 @@ export default  function Dashboard(){
        setUsername(data.user.username)
        const region_string = `${data.user.Region.city} ${data.user.Region.country}`
        setRegion(region_string)
+       setPicture(data.user.picture.split('uploads')[1].replace(/\\/g, '/'))
 
        
 
@@ -115,19 +129,37 @@ export default  function Dashboard(){
                     <div className="col-md-5">
                           <div className="rectangle">
                             <Image src={"/pen.png"} alt="Edit" height={30} 
-                            width={30} className="edit_icon_dash">
+                            width={30} className="edit_icon_dash"
+                            onClick={()=>$('#profile_modal_bg').show()}>
 
                             </Image>
                               <div className="account_top">
                                   Account
                               </div>
                               <div className="account_bot">
-                                  <ul>
-                                    <li>Username: {username}</li>
-                                    <li>Name: {firstName}{lastName}</li>
-                                    <li>Email: {email}</li>
-                                    <li>Region: {region}</li>
-                                  </ul>
+
+                                <div className="photo_right">
+
+                                    {pictureUrl && <img src={url + '/uploads' + pictureUrl}></img>}
+
+                                    {!pictureUrl && <img src={'/avatar.png'}
+                                    alt="profile picture">
+                                    </img>}
+
+                                </div>
+
+                                <div className="info_left">
+                                  
+                                    <ul>
+                                        <li>Username: {username}</li>
+                                        <li>Name: {firstName}{lastName}</li>
+                                        <li>Email: {email}</li>
+                                        <li>Region: {region}</li>
+                                      </ul>
+
+                                </div>
+
+                                 
                               </div>
 
                           </div>
@@ -148,6 +180,13 @@ export default  function Dashboard(){
                 </div>
             </div>
      </div>
+
+
+{modal && <UserModal url={url} username={username} email={email} firstName={firstName} lastName={lastName}
+pictureUrl={pictureUrl}/>}
+
+
+
 </div>
   )
 }

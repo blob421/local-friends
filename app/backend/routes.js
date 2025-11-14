@@ -4,7 +4,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt'); // for password hashing
 const jwt = require('jsonwebtoken');
-
+const fs = require('fs')
 
 
 const { User, Post, Team, Badge, Region, Media } = require('./db');
@@ -28,7 +28,20 @@ filename: (req, file ,cb) => {
 }
 })
 
-const upload = multer({ storage });
+const storageUser = multer.diskStorage({ 
+destination: (req, file, cb) => {
+  const uploadPath = path.join(__dirname,'uploads','user', String(req.user.id))
+  fs.mkdirSync(uploadPath, { recursive: true });
+  cb(null, uploadPath)
+}, 
+
+filename: (req, file ,cb) => {
+  cb(null, Date.now() + path.extname(file.originalname));
+}
+})
+
+const upload = multer({ storage : storage });
+const uploadUser = multer({storage : storageUser})
 //////////////////// AUTH ///////////////////////////
 
 router.post('/login', async (req, res) => {
@@ -164,4 +177,56 @@ router.get('/home', authenticateToken, async (req, res) =>{
 router.get('/images', async (req, res)=>{
 
 })
+
+///////////////////////////// PROFILE //////////////////////////////////
+router.post('/profile/edit', authenticateToken, uploadUser.single('image'), 
+async (req, res)=>{
+ const file = req.file
+ data = req.body
+ const user = await User.findByPk(req.user.id)
+ let username_exists
+
+ if (file){
+  
+  if(user.picture){
+    
+    fs.unlink(user.picture, (err)=>{
+      if (err){
+        console.log(err);
+        return
+      }
+     
+      
+    })
+  }
+  user.picture = file.path
+  }
+
+  if (data.username){
+    const exists = await User.findOne({where:{username: data.username}})
+    if (exists){
+      username_exists = true
+    }
+    user.firstName = data.firstName
+  }
+  if (data.firstName){
+    user.firstName = data.firstName
+  }
+   if (data.lastName){
+    user.lastName = data.lastName
+  }
+  if (data.password){
+    user.password = await bcrypt.hash(data.password, 10)
+    
+  }
+  if (data.email){
+    user.email = data.email
+  }
+  await user.save()
+  if (username_exists){
+    res.redirect(`${process.env.FRONT_END_URL}/dashboard?modal=true&username=false`)
+  }
+  res.redirect(`${process.env.FRONT_END_URL}/dashboard?modal=true`)
+ }
+)
 module.exports = router;

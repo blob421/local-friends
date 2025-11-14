@@ -13,6 +13,8 @@ User.init(
     email: {type: DataTypes.STRING, allowNull: false},
     username: {type: DataTypes.STRING, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
+    picture: {type: DataTypes.STRING}
+    
   },
   {
     // Other model options go here
@@ -95,13 +97,15 @@ Media.init(
   {
     filename: { type: DataTypes.STRING, allowNull: false },
     url: { type: DataTypes.STRING, allowNull: false },
-    mimeType:{type: DataTypes.STRING, allowNull:false}
+    mimeType:{type: DataTypes.STRING, allowNull:false},
+    
   },
   { sequelize, modelName: 'Media' }
 );
 
 //////////////////////////// RELATIONS //////////////////////////////
 Post.hasMany(Media) // for include media in post
+User.hasOne(Media)
 Media.belongsTo(Post,{
   onDelete: 'CASCADE'
 })
