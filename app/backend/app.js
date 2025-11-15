@@ -25,7 +25,13 @@ async function main() {
   // Make sure tables exist
   await sequelize.sync({alter: true});
   console.log('Database synced');
-  
+
+  await queryInterface.sequelize.query(`
+  CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  CREATE INDEX IF NOT EXISTS regions_name_trgm_idx
+  ON "Regions"
+  USING gin (name gin_trgm_ops);
+`);
 
   app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');

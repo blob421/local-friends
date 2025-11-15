@@ -25,14 +25,24 @@ User.init(
 
 class Region extends Model {}
 Region.init({
-  name: {type: DataTypes.STRING , allowNull: false, unique:true},
-  municipality: {type: DataTypes.STRING},
-  city: {type: DataTypes.STRING, allowNull: false},
-  country: {type: DataTypes.STRING, allowNull: false},
+  osm_id: {type: DataTypes.BIGINT},
+  osm_type: {type: DataTypes.STRING},
+  name: {type: DataTypes.TEXT},
+  display_name: {type:DataTypes.STRING},
+  county: {type: DataTypes.STRING},
+  country: {type: DataTypes.STRING},
+  country_code: {type: DataTypes.STRING},
+  iso : {type: DataTypes.STRING},
+  state: {type: DataTypes.STRING},
+  kind: {type: DataTypes.STRING},
+  bbox: {type: DataTypes.ARRAY(DataTypes.FLOAT)},
+  location: {type: DataTypes.ARRAY(DataTypes.FLOAT)},
+
 },
 {
   sequelize,
-  modelName: 'Region'
+  modelName: 'Region',
+  timestamps: false
 })
 
 

@@ -62,9 +62,9 @@ return (
 
 
             <div className="col-md-8 feed_middle" id='feed_middle'>
-                <input className='expand_post_create' value={'<'} onClick={expand}>
-                    
-                </input>
+                <button className='expand_post_create' onClick={expand}>
+                    v
+                </button>
                 
                 {posts?.map(post => (
                     

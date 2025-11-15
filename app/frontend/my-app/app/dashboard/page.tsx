@@ -18,16 +18,18 @@ export default  function Dashboard(){
   const [region , setRegion] = useState("")
   const [pictureUrl, setPicture] = useState("")
   const [showModal, setModal] = useState(false)
+  const [modalTriggered, setModalTriggered] = useState(false)
   
-  const params = new URLSearchParams(window.location.search)
-  const modal = params.get('modal')
-  
-  if(modal){
-   $('#profile_modal_bg').show()
-  }
-
+ 
   useEffect(()=>{
     const fetch_data = async () =>{
+    const params = new URLSearchParams(window.location.search)
+    const modal = params.get('modal')
+    
+    if(modal){
+    setModal(true)
+    $('#profile_modal_bg').show()
+    }
 
     try {
 
@@ -130,7 +132,12 @@ export default  function Dashboard(){
                           <div className="rectangle">
                             <Image src={"/pen.png"} alt="Edit" height={30} 
                             width={30} className="edit_icon_dash"
-                            onClick={()=>$('#profile_modal_bg').show()}>
+                            onClick={
+                              ()=>{ 
+                              setModalTriggered(true); 
+                              $('#profile_modal_bg').show()
+                              }
+                              }>
 
                             </Image>
                               <div className="account_top">
@@ -182,8 +189,8 @@ export default  function Dashboard(){
      </div>
 
 
-{modal && <UserModal url={url} username={username} email={email} firstName={firstName} lastName={lastName}
-pictureUrl={pictureUrl}/>}
+{(showModal || modalTriggered) && (<UserModal url={url} username={username} email={email} firstName={firstName} lastName={lastName}
+pictureUrl={pictureUrl}/>)}
 
 
 

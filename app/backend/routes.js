@@ -4,7 +4,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt'); // for password hashing
 const jwt = require('jsonwebtoken');
-const fs = require('fs')
+
 
 
 const { User, Post, Team, Badge, Region, Media } = require('./db');
@@ -17,6 +17,7 @@ const authenticateToken = require('./jwt_middleware');
 //////////////////// FILE STORAGE ///////////////////
 const multer = require('multer')
 const path = require('path');
+const fs = require('fs')
 
 const storage = multer.diskStorage({ 
 destination: (req, file, cb) => {

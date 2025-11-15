@@ -1,6 +1,9 @@
 
 import { useState } from "react";
 import $ from 'jquery'
+import {useEffect} from 'react'
+import AsyncSelect from 'react-select/async';
+import debounce from "lodash.debounce";
 
 type UserInfoModalProps = {
   url?: string;        // might be undefined
@@ -11,23 +14,47 @@ type UserInfoModalProps = {
   pictureUrl?: string;
 };
 
+const loadOptions = debounce((inputValue, callback) => {
+  if (inputValue.length < 2) {
+    callback([]);
+    return;
+  }
+
+  fetch(`/api/regions?search=${inputValue}`)
+    .then((res) => res.json())
+    .then((data) =>
+      callback(
+        data.map((region: any) => ({
+          value: region.id,
+          label: region.name,
+        }))
+      )
+    );
+}, 400); // 400ms debounce
+
+
+
 export default function User_info_modal({url, username, email, firstName, lastName,
     pictureUrl}: UserInfoModalProps){
-  const [newPassword, setNewPass] = useState("");
-  const [passConf, setPassConf] = useState("");
-  const params = new URLSearchParams(window.location.search)
-  const usernameExists = params.get('username')
+    const [newPassword, setNewPass] = useState("");
+    const [passConf, setPassConf] = useState("");
+    const params = new URLSearchParams(window.location.search)
+    const usernameExists = params.get('username')
+  
+   
 
   return(
     
     <div id="profile_modal_bg">
      <div className="profile_modal">
-        <input className="x_btn_modal_edit_dash" value={'X'}
-        onClick={()=> $('#profile_modal_bg').hide()}></input>
+        <button className="x_btn_modal_edit_dash"
+        onClick={()=> $('#profile_modal_bg').hide()}>X</button>
 
          <form className="image_form" encType="multipart/form-data" 
           action={`${url}/profile/edit`} method="POST">
+
             <div className="top_picture_flex">
+             
                 {pictureUrl && <img src={url + '/uploads' + pictureUrl} className="pic_edit"></img>}
         
                 {!pictureUrl && <img src={'/avatar.png'} className="pic_edit"
@@ -37,6 +64,16 @@ export default function User_info_modal({url, username, email, firstName, lastNa
                 <label htmlFor="avatarUpload" className="custom_upload">
                 <img src="/pen.png" alt="Upload avatar" />
                 </label>
+             
+                <div id="region_dropdown">
+                      <AsyncSelect
+                          cacheOptions
+                          loadOptions={loadOptions}
+                          defaultOptions
+                          onChange={(selected) => onSelect(selected?.value)}
+                          placeholder="Search for your region..."
+                        />
+                </div>
             </div>
 
             <input
@@ -64,13 +101,13 @@ export default function User_info_modal({url, username, email, firstName, lastNa
               </div>
               <div>
                     <div>Username:</div>
-                    <input type="text" name="username" placeholder={username}>
+                    <input type="text" name="username" placeholder={username} autoComplete="new-username">
                     </input>
                     
               </div>
               <div>
                      <div>Email:</div>
-                    <input type="text" name="email" placeholder={email}>
+                    <input type="text" name="email" placeholder={email} autoComplete="new-email">
                     </input>
               </div>
 
@@ -85,7 +122,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
                    <div>Confirm:</div>
                   <input type="password" name="password_2"
               onChange={(e)=> setPassConf(e.target.value)}
-              placeholder="Confirm"></input>
+              placeholder="Confirm" autoComplete="new-password"></input>
               </div>
                 
             {passConf == newPassword &&  

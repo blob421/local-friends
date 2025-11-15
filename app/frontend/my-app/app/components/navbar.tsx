@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image'
 
+
+
 export default function Navbar(){
     return (
         
@@ -10,6 +12,7 @@ export default function Navbar(){
                    <Image width={24} height={20} src={'/home.jpg'} alt={""}>
                    </Image>
                </Link>
+               <Link href={'/map'}>Map</Link>
         </nav>
     )
 }
